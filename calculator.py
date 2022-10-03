@@ -1,22 +1,15 @@
-from socket import inet_pton, AF_INET6, error as socket_error
+from ctypes import FormatError
+from msilib import add_data
+from socket import inet_pton, inet_ntop, AF_INET6, error as socket_error
 
-class ipv6address:
-    @staticmethod
-    def as_hexquartet(address: bytes):
-        pass
+# Retorna o IPv6 inserido na forma de bytes
+# Caso seja inválido, indica um
+def ipv6_as_bytes(address_as_string: str) -> bytes:
+    try:
+        return inet_pton(AF_INET6, address_as_string)
+    except socket_error:
+        raise ValueError("O Endereço IPv6 inserido é inválido.")
 
-    @staticmethod
-    def as_string(address: bytes):
-        pass
-
-    @staticmethod
-    def as_bytes(address: str):
-        pass
-
-    @staticmethod
-    def check_ipv6_string(input: str) -> bool:
-        try:
-            inet_pton(AF_INET6, input)
-            return True
-        except socket_error:
-            return False
+# Retorna o IPv6 na forma de string
+def ipv6_as_string(address_as_bytes: bytes) -> str:
+    return inet_ntop(AF_INET6, address_as_bytes)
