@@ -1,2 +1,3 @@
-# ipv6-calculator
-A basic IPv6 addresses calculator
+# IPv6 Addresses Calculator
+# Calculadora de endereçamento IPv6
+_
