@@ -1,16 +1,7 @@
-from socket import inet_pton, inet_ntop, AF_INET6, error as socket_error
+from math import ceil, log
 
-# Retorna o IPv6 inserido na forma de bytes
-# Caso seja inválido, indica um
-def ipv6_as_bytes(address_as_string: str) -> bytes:
-    try:
-        return inet_pton(AF_INET6, address_as_string)
-    except socket_error:
-        raise ValueError("O Endereço IPv6 inserido é inválido.")
-
-# Retorna o IPv6 na forma de string
-def ipv6_as_string(address_as_bytes: bytes) -> str:
-    return inet_ntop(AF_INET6, address_as_bytes)
+CIDR_MIN = 1
+CIDR_MAX = 127
 
 # Retorna a OR mask para calcular um endereço IPV6
 # Precisa da quantidade de bits ignorados (inalterados)
@@ -23,6 +14,30 @@ def or_mask(unchanged_bits: int, changed_bits: str) -> int:
 # Função que lê bytes em big endian e retorna um inteiro
 bytes_as_int = lambda byt: int.from_bytes(byt, 'big')
 
-# Função que calcula passos leftmost e rightmost e os retorna em uma lista.
-def rightmost_leftmost_steps(number_of_subnets: int) -> list[str]:
-    pass
+# Função que calcula passos leftmost e rightmost e os retorna em listas.
+def rightmost_leftmost_steps(
+    number_of_subnets: int
+) -> tuple[list[str], list[str]]:
+    # Menor potência de 2 maior que number_of_subnets e seu expoente
+    exponent = ceil(log(number_of_subnets, 2))
+    # Então cada passo terá (exponent) bits
+    rightmost_list = list() # Endereços gerados utilizando rightmost
+    leftmost_list = list() # Endereços gerados utilizando leftmost
+    for i in range(number_of_subnets):
+        rightmost = format(i, f'0{exponent}b')
+        leftmost = rightmost[::-1] # Leftmost é o inverso do rightmost
+        rightmost_list.append(rightmost)
+        leftmost_list.append(leftmost)
+    return (rightmost_list, leftmost_list)
+
+def ipv6_cidr_treatment(ipv6_address: str) -> tuple[bytes, int]:
+    address, cidr = ipv6_address.split('/')
+    # Tratamento do CIDR, verifica se é um número e está dentro do intervalo
+    try:
+        cidr = int(cidr)
+    except ValueError as e:
+        raise ValueError(f"o CIDR inserido é inválido:\n{e}")
+    if not (cidr >= CIDR_MIN and cidr <= CIDR_MAX):
+        raise ValueError(f"valor do CIDR deve estar entre {CIDR_MIN} e {CIDR_MAX}")
+    # Tratamento do IP, TODO
+    return address, cidr
