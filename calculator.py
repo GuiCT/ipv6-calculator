@@ -3,7 +3,7 @@ from math import ceil, log
 
 from ipv6utils import ipv6_as_bytes, ipv6_as_str
 
-CIDR_MIN = 1
+CIDR_MIN = 0
 CIDR_MAX = 127
 
 # Retorna a OR mask para calcular um endereço IPV6
