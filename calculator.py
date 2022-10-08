@@ -68,15 +68,19 @@ if __name__ == '__main__':
             while True:
                 try:
                     subnet_amount = int(input('Insira a quantidade de sub-redes a ser geradas: '))
+                    # CIDR das redes resultantes: CIDR original + expoente da potência de 2
+                    exponent = ceil(log(subnet_amount, 2))
+                    subnet_cidr = cidr + exponent
+                    # Se o CIDR resultante for maior que 128, pedir novo valor
+                    if subnet_cidr > 128:
+                        print('O bloco não pode ser divido nessa quantidade de sub-redes, insira um valor menor.')
+                        continue
                 except ValueError:
                     print('Valor deve ser um inteiro.')
                 else:
                     break
             # Máscaras rightmost e leftmost
             rightmask, leftmask = rightmost_leftmost_steps(subnet_amount)
-            # CIDR das redes resultantes: CIDR original + expoente da potência de 2
-            exponent = ceil(log(subnet_amount, 2))
-            subnet_cidr = cidr + exponent
             # Convertendo IP original em inteiro para aplicar máscaras OR
             ipv6_integer = bytes_as_int(ipv6_bytes)
             # Aplicando máscaras OR compostas pelas máscaras leftmost e rightmost
