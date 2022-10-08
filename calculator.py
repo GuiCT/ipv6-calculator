@@ -97,10 +97,10 @@ if __name__ == '__main__':
             # Printando rightmost
             print('Divisão de endereços utilizando rightmost:')
             for i, address in enumerate(rightaddresses):
-                print(f'{i}: {ipv6_as_str(address)}')
+                print(f'{i}: {ipv6_as_str(address)}/{subnet_cidr}')
             # Printando leftmost
             print('Divisão de endereços utilizando leftmost:')
             for i, address in enumerate(leftaddresses):
-                print(f'{i}: {ipv6_as_str(address)}')
+                print(f'{i}: {ipv6_as_str(address)}/{subnet_cidr}')
     except KeyboardInterrupt:
         exit(0)
