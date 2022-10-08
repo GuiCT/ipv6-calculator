@@ -39,7 +39,17 @@ def ipv6_as_bytes(ipv6_str: str) -> bytes:
     return bytes(res_bytearray)
 
 def ipv6_as_str(ipv6_byt: bytes) -> str:
-    pass
-
-if __name__ == '__main__':
-    ipv6_as_bytes('2001::')
+    # Separando grupos um por um
+    # Lista de grupos (como string)
+    groups = list()
+    for index in range(0, 16, 2):
+        # Grupo como bytes
+        group_bytes = ipv6_byt[index:index+2]
+        # Grupo como inteiro
+        group_int = int.from_bytes(group_bytes, 'big')
+        # Formatando para formato hexadecimal
+        group_str = format(group_int, '04x')
+        # Guardando na lista
+        groups.append(group_str)
+    # Separando cada grupo com :
+    return ':'.join(groups)
